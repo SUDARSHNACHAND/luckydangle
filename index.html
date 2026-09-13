@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Dangle | Screen Charms for Mac & Windows</title>
+  <meta name="description"
+    content="Choose a lucky charm and hang it from the top of your screen. Interactive physics sways while you work with authentic traditional rituals.">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+
+  <!-- Fullscreen Physics Simulation Canvas -->
+  <canvas id="dangle-canvas"></canvas>
+
+  <!-- Hero Header -->
+  <header class="hero">
+    <div class="hero-badge">✨ Interactive Screen Charm</div>
+    <h1 class="hero-title">Lucky Dangle</h1>
+    <p class="tagline">A traditional lucky charm hanging on your screen.</p>
+    <p class="sub">
+      Choose a charm to hang from the top edge of your display. Grab it, drag it, flick it, or activate its authentic
+      ritual anytime.
+    </p>
+
+    <div class="hint-bar">
+      <span>Try it: Grab the charm above & flick it</span>
+      <span>•</span>
+      <span>Shortcuts: <kbd>Ctrl+D</kbd> Toggle <kbd>Ctrl+S</kbd> Ritual <kbd>Ctrl+R</kbd> Center</span>
+    </div>
+  </header>
+
+  <!-- Charm Collection Section -->
+  <main class="collection">
+    <div class="section-header">
+      <h2 class="section-title">Choose Your Charm</h2>
+      <p class="section-sub">Select a charm below to hang it on your screen. Each charm has its own ritual.</p>
+    </div>
+
+    <div class="grid" id="charm-grid">
+      <!-- BMW Symbol Spinner Card -->
+      <article class="card" data-charm="bmw">
+        <div class="charm-preview-box">
+          <img src="/charms/BMW.svg.webp" alt="BMW Symbol Spinner charm preview">
+        </div>
+        <h3>BMW Spinner</h3>
+        <span class="origin">Germany</span>
+        <p class="description">The legendary Bavarian roundel spinner. Flick or trigger ritual to rev the engine and spin at high RPM.</p>
+        <button class="ritual-btn" data-action="ritual">Rev the engine</button>
+      </article>
+
+      <!-- Nimbu Mirchi Card -->
+      <article class="card active" data-charm="nimbu-mirchi">
+        <div class="charm-preview-box">
+          <img src="/charms/nimbu-lemon.png" alt="Nimbu-mirchi charm preview">
+        </div>
+        <h3>Nimbu-mirchi</h3>
+        <span class="origin">India</span>
+        <p class="description">Seven chillies and a lemon hung at the threshold to turn away misfortune.</p>
+        <button class="ritual-btn" data-action="ritual">Hang a fresh garland</button>
+      </article>
+
+      <!-- Maneki Neko Card -->
+      <article class="card" data-charm="maneki-neko">
+        <div class="charm-preview-box">
+          <img src="/charms/maneki-neko.png" alt="Maneki-neko charm preview">
+        </div>
+        <h3>Maneki-neko</h3>
+        <span class="origin">Japan</span>
+        <p class="description">A beckoning cat that invites good fortune in. Call on it and watch its raised paw wave.
+        </p>
+        <button class="ritual-btn" data-action="ritual">Beckon good fortune</button>
+      </article>
+
+      <!-- Daruma Card -->
+      <article class="card" data-charm="daruma">
+        <div class="charm-preview-box">
+          <img src="/charms/daruma.png" alt="Daruma wishing doll charm preview">
+        </div>
+        <h3>Daruma</h3>
+        <span class="origin">Japan</span>
+        <p class="description">A wishing doll for goals that take grit. Paint one eye when you make a wish and the other when it comes true.</p>
+        <button class="ritual-btn" data-action="ritual">Make a wish</button>
+      </article>
+
+      <!-- Drishti Bommai Card -->
+      <article class="card" data-charm="drishti-bommai">
+        <div class="charm-preview-box">
+          <img src="/charms/drishti-bommai.png" alt="Drishti bommai charm preview">
+        </div>
+        <h3>Drishti bommai</h3>
+        <span class="origin">South India</span>
+        <p class="description">A fierce guardian painted to meet the first bad glance. Repaint it through sacred colors.
+        </p>
+        <button class="ritual-btn" data-action="ritual">Repaint the guardian</button>
+      </article>
+
+      <!-- Chinese Knot Card -->
+      <article class="card" data-charm="chinese-knot">
+        <div class="charm-preview-box">
+          <img src="/charms/chinese-knot.png" alt="Páncháng jié Chinese knot charm preview">
+        </div>
+        <h3>Páncháng jié (Chinese Knot)</h3>
+        <span class="origin">China</span>
+        <p class="description">One unbroken red cord tied for good fortune without end. A timeless symbol of unity and luck.</p>
+        <button class="ritual-btn" data-action="ritual">Tie in good fortune</button>
+      </article>
+
+      <!-- Himmeli Card -->
+      <article class="card" data-charm="himmeli">
+        <div class="charm-preview-box">
+          <img src="/charms/himmeli.png" alt="Himmeli geometric mobile charm preview">
+        </div>
+        <h3>Himmeli</h3>
+        <span class="origin">Finland</span>
+        <p class="description">A rye-straw geometric mobile for abundance, fruitful flow of work, and peaceful focus.</p>
+        <button class="ritual-btn" data-action="ritual">Set it turning</button>
+      </article>
+
+      <!-- Hamsa Card -->
+      <article class="card" data-charm="hamsa">
+        <div class="charm-preview-box">
+          <img src="/charms/hamsa.png" alt="Hamsa charm preview">
+        </div>
+        <h3>Hamsa</h3>
+        <span class="origin">Middle East & Africa</span>
+        <p class="description">An open hand carried for protection and good fortune. Send bad luck on its way.</p>
+        <button class="ritual-btn" data-action="ritual">Ward off bad luck</button>
+      </article>
+
+      <!-- Nazar Card -->
+      <article class="card" data-charm="nazar">
+        <div class="charm-preview-box">
+          <img src="/charms/nazar.png" alt="Nazar boncugu charm preview">
+        </div>
+        <h3>Nazar boncuğu</h3>
+        <span class="origin">Turkey & Mediterranean</span>
+        <p class="description">A glass eye worn against evil eyes. Pulse its protective wave when you need cover.</p>
+        <button class="ritual-btn" data-action="ritual">Give it a flick</button>
+      </article>
+
+      <!-- Ghanta Card -->
+      <article class="card" data-charm="ghanta">
+        <div class="charm-preview-box">
+          <img src="/charms/ghanta.png" alt="Ghanta bell charm preview">
+        </div>
+        <h3>Ghanta (Bell)</h3>
+        <span class="origin">India</span>
+        <p class="description">A bell rung to clear the air and mark a new beginning. Ring it before something that
+          matters.</p>
+        <button class="ritual-btn" data-action="ritual">Ring the bell</button>
+      </article>
+
+      <!-- Custom Emoji Card -->
+      <article class="card" data-charm="custom">
+        <div class="charm-preview-box">
+          <div style="font-size: 3.5rem;" id="emoji-preview">🍀</div>
+        </div>
+        <h3>Custom Emoji</h3>
+        <span class="origin">Yours</span>
+        <p class="description">Choose any emoji and make the charm your own. Pick whatever feels lucky to you.</p>
+        <button class="ritual-btn" data-action="ritual">Pick an emoji</button>
+        <div class="emoji-picker-container" id="emoji-picker">
+          <input type="text" id="emoji-input" value="🍀" maxlength="4" placeholder="Paste emoji">
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- Desktop App Feature Overview -->
+  <section class="desktop-section">
+    <div class="section-header">
+      <h2 class="section-title">At Home on your Mac or Windows PC</h2>
+      <p class="section-sub">Lucky Dangle lives in your system tray and leaves the rest of your machine alone.</p>
+    </div>
+
+    <div class="desktop-frame">
+      <div class="top-bar-sim">
+        <div><span>💻 Lucky Dangle Screen App</span></div>
+        <div><span>🧿 System Tray Active</span> • <span>Click-Through Overlay ON</span></div>
+      </div>
+      <div class="desktop-preview-body">
+        <p style="color: rgba(255,255,255,0.4); font-size: 0.95rem;">
+          Drag the string top anchor horizontally to position your charm anywhere along the top screen edge!
+        </p>
+      </div>
+    </div>
+
+    <div class="desktop-points">
+      <div class="point-item">
+        <strong>⚡ Seamless Click-Through:</strong> Only the charm body catches your mouse cursor. All other clicks pass
+        straight through to underlying windows.
+      </div>
+      <div class="point-item">
+        <strong>🎯 Authentic Rituals:</strong> Trigger bell chimes, beckoning cat waves, and garland refreshes from the
+        Windows System Tray or hotkeys.
+      </div>
+      <div class="point-item">
+        <strong>🪟 Windows System Tray Controls:</strong> Hide/Show overlay, switch charms, or trigger rituals right
+        from your Windows notification area.
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating Control Bar -->
+  <div class="control-bar">
+    <button class="ctrl-btn" id="btn-ritual">✨ Perform Ritual</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="btn-recenter">📍 Center Charm</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn sound-toggle-btn" id="btn-audio">
+      <svg class="sound-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      </svg>
+      <span id="btn-audio-text">Sound ON</span>
+    </button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="btn-toggle-dangle">👁️ Enable/Disable</button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

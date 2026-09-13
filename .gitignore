@@ -1,0 +1,19 @@
+# Node dependencies
+node_modules/
+
+# Production build directory (generated via npm run build)
+dist/
+
+# Logs and system files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+*.log
+
+# Editor / workspace
+.vscode/
+.idea/
+.gemini/
+.agents/
