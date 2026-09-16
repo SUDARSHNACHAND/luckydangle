@@ -8,6 +8,7 @@ app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-zero-copy');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 let overlayWindow = null;
 let galleryWindow = null;
@@ -184,21 +185,55 @@ function createTrayWindow() {
 
 function positionTrayWindow() {
   if (!tray || !trayWindow || trayWindow.isDestroyed()) return;
-  const trayBounds = tray.getBounds();
+
   const windowBounds = trayWindow.getBounds();
-  const primaryDisplay = screen.getPrimaryDisplay();
-  const { width: screenWidth, height: screenHeight, x: screenX, y: screenY } = primaryDisplay.workArea;
+  const trayBounds = tray.getBounds();
 
-  // Center horizontally over tray icon, clamped inside screen
-  let x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2));
-  x = Math.max(screenX + 8, Math.min(x, screenX + screenWidth - windowBounds.width - 8));
-
-  // Position vertically above taskbar
-  let y = Math.round(trayBounds.y - windowBounds.height - 8);
-  if (y < screenY + 8) {
-    // Taskbar is at top of screen
-    y = Math.round(trayBounds.y + trayBounds.height + 8);
+  // Find the display where the tray icon is located, or nearest to cursor
+  let targetDisplay = null;
+  if (trayBounds && trayBounds.width > 0 && trayBounds.height > 0) {
+    targetDisplay = screen.getDisplayNearestPoint({ x: trayBounds.x, y: trayBounds.y });
+  } else {
+    const cursor = screen.getCursorScreenPoint();
+    targetDisplay = screen.getDisplayNearestPoint(cursor);
   }
+
+  if (!targetDisplay) {
+    targetDisplay = screen.getPrimaryDisplay();
+  }
+
+  const { width: screenWidth, height: screenHeight, x: screenX, y: screenY } = targetDisplay.workArea;
+  const displayBounds = targetDisplay.bounds;
+
+  // Determine taskbar position (Bottom, Top, Left, Right)
+  const isTaskbarTop = targetDisplay.workArea.y > displayBounds.y;
+  const isTaskbarLeft = targetDisplay.workArea.x > displayBounds.x;
+  const isTaskbarRight = (displayBounds.x + displayBounds.width) > (targetDisplay.workArea.x + targetDisplay.workArea.width);
+
+  let x, y;
+
+  if (isTaskbarLeft) {
+    x = targetDisplay.workArea.x + 8;
+    y = trayBounds && trayBounds.y > 0 ? Math.round(trayBounds.y - (windowBounds.height / 2)) : screenY + screenHeight - windowBounds.height - 16;
+  } else if (isTaskbarRight) {
+    x = targetDisplay.workArea.x + targetDisplay.workArea.width - windowBounds.width - 8;
+    y = trayBounds && trayBounds.y > 0 ? Math.round(trayBounds.y - (windowBounds.height / 2)) : screenY + screenHeight - windowBounds.height - 16;
+  } else if (isTaskbarTop) {
+    x = trayBounds && trayBounds.x > 0 ? Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2)) : screenX + screenWidth - windowBounds.width - 16;
+    y = targetDisplay.workArea.y + 8;
+  } else {
+    // Bottom taskbar (Standard Windows 10 & 11)
+    if (trayBounds && trayBounds.width > 0 && trayBounds.y > 0) {
+      x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2));
+      y = Math.round(trayBounds.y - windowBounds.height - 8);
+    } else {
+      x = screenX + screenWidth - windowBounds.width - 16;
+      y = screenY + screenHeight - windowBounds.height - 16;
+    }
+  }
+
+  // Ensure window is strictly clamped inside the target monitor's workArea
+  x = Math.max(screenX + 8, Math.min(x, screenX + screenWidth - windowBounds.width - 8));
   y = Math.max(screenY + 8, Math.min(y, screenY + screenHeight - windowBounds.height - 8));
 
   trayWindow.setPosition(x, y, false);
@@ -270,6 +305,7 @@ function createOverlayWindow() {
     x: x,
     y: y,
     transparent: true,
+    backgroundColor: '#00000000',
     frame: false,
     alwaysOnTop: true,
     resizable: false,
@@ -283,20 +319,32 @@ function createOverlayWindow() {
     }
   });
 
+  try {
+    overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+    overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  } catch (err) {}
+
   // Enable click-through by default so windows underneath are clicked normally
   overlayWindow.setIgnoreMouseEvents(true, { forward: true });
 
   const overlayDistPath = path.join(__dirname, '../dist/overlay.html');
+  const overlayLocalPath = path.join(__dirname, '../overlay.html');
   if (fs.existsSync(overlayDistPath)) {
     overlayWindow.loadFile(overlayDistPath);
+  } else if (fs.existsSync(overlayLocalPath)) {
+    overlayWindow.loadFile(overlayLocalPath);
   } else {
-    overlayWindow.loadURL('http://localhost:3000/overlay.html');
+    overlayWindow.loadURL('http://localhost:5173/overlay.html');
   }
 
   // Handle pointer forward/catch from overlay canvas
-  ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
+  ipcMain.on('set-ignore-mouse-events', (event, ignore) => {
     if (overlayWindow && !overlayWindow.isDestroyed()) {
-      overlayWindow.setIgnoreMouseEvents(ignore, options);
+      if (ignore) {
+        overlayWindow.setIgnoreMouseEvents(true, { forward: true });
+      } else {
+        overlayWindow.setIgnoreMouseEvents(false);
+      }
     }
   });
 
@@ -405,10 +453,13 @@ function openGalleryWindow() {
   });
 
   const distPath = path.join(__dirname, '../dist/index.html');
+  const localPath = path.join(__dirname, '../index.html');
   if (fs.existsSync(distPath)) {
     galleryWindow.loadFile(distPath);
+  } else if (fs.existsSync(localPath)) {
+    galleryWindow.loadFile(localPath);
   } else {
-    galleryWindow.loadURL('http://localhost:3000');
+    galleryWindow.loadURL('http://localhost:5173');
   }
 
   galleryWindow.on('closed', () => {
@@ -416,13 +467,37 @@ function openGalleryWindow() {
   });
 }
 
+function updateOverlayBounds() {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height, x, y } = primaryDisplay.bounds;
+  overlayWindow.setBounds({
+    x: x,
+    y: y,
+    width: width,
+    height: Math.min(height, 740)
+  });
+  sendToOverlay('display-changed', { width, height });
+}
+
 app.whenReady().then(() => {
   createOverlayWindow();
   createTray();
 
+  // Multi-monitor & DPI scaling dynamic event handlers
+  screen.on('display-metrics-changed', updateOverlayBounds);
+  screen.on('display-added', updateOverlayBounds);
+  screen.on('display-removed', updateOverlayBounds);
+
   app.on('activate', () => {
     if (!overlayWindow) createOverlayWindow();
   });
+});
+
+app.on('child-process-gone', (event, details) => {
+  if (details.type === 'GPU' && details.reason !== 'clean-exit') {
+    console.warn('GPU process crash detected on Windows, maintaining state:', details);
+  }
 });
 
 app.on('will-quit', () => {

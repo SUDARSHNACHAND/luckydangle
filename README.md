@@ -3,7 +3,7 @@
 > **Interactive Cultural Screen Charms & Spinners for Windows PC**  
 > Hang traditional lucky charms, spinners, and talismans from the top of your display with authentic spring-mass physics, procedural Web Audio rituals, and a sleek **All-in-One Taskbar Controller** that keeps your screen 100% clean and unobstructed.
 
-[![Version](https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge)](https://github.com/SUDARSHNACHAND/luckydangle)
+[![Version](https://img.shields.io/badge/Version-2.0.0-blueviolet?style=for-the-badge)](https://github.com/SUDARSHNACHAND/luckydangle)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SUDARSHNACHAND/luckydangle)
 [![Runtime](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Framework](https://img.shields.io/badge/Electron-33-47848F?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
@@ -14,6 +14,7 @@
 ## 📑 Table of Contents
 
 - [🌟 What's New in Version 2.0](#-whats-new-in-version-20)
+- [💻 Full Windows Environment Compatibility](#-full-windows-environment-compatibility)
 - [🖥️ System Requirements](#️-system-requirements)
 - [🚀 How to Start on Windows (Step-by-Step)](#-how-to-start-on-windows-step-by-step)
   - [1. Prerequisites](#1-prerequisites)
@@ -26,7 +27,7 @@
 - [🧿 Complete Charms & Rituals Roster (12 Charms)](#-complete-charms--rituals-roster-12-charms)
 - [⌨️ Global Keyboard Shortcuts & Mouse Controls](#️-global-keyboard-shortcuts--mouse-controls)
 - [🛠️ Project Structure](#️-project-structure)
-- [🔧 Development & Customization](#-development--customization)
+- [🔧 Troubleshooting & Common Windows Questions](#-troubleshooting--common-windows-questions)
 - [📜 License](#-license)
 
 ---
@@ -50,7 +51,38 @@
   - Exactly 12 authentic, high-definition charms arranged in a symmetrical 2-row × 6-column quick-select grid.
 
 * ⚡ **Ultra-Smooth 60+ FPS Engine**:
-  - GPU hardware-accelerated canvas rendering (`ignore-gpu-blocklist`, `enable-zero-copy`, `enable-gpu-rasterization`).
+  - GPU hardware-accelerated canvas rendering with crash-resilient process recovery.
+
+---
+
+## 💻 Full Windows Environment Compatibility
+
+Lucky Dangle is engineered for seamless operation across **all modern Windows desktop configurations**:
+
+1. **Multi-Monitor & Multi-Display Setups**:
+   - Automatically detects which monitor your mouse or taskbar is on.
+   - The All-in-One Controller flyout docks accurately to the taskbar on **any display** (Primary, Secondary, or Tertiary).
+   - Dynamic monitor listener (`screen.on('display-metrics-changed')`) auto-resizes the overlay when docking/undocking laptops, plugging in external monitors, or switching resolutions.
+
+2. **Any Taskbar Position Supported**:
+   - **Bottom Taskbar**: Default in Windows 10 and Windows 11 (both centered and left-aligned).
+   - **Top Taskbar**: Flyout gracefully anchors below the taskbar.
+   - **Left / Right Taskbars**: Flyout anchors horizontally aligned with the tray icon.
+   - **Auto-Hide Taskbars**: Flyout clamps inside the visible work area without overflowing.
+
+3. **High-DPI & Custom Display Scaling**:
+   - Fully optimized for **100%, 125%, 150%, 175%, 200%, and 4K UHD** scaling.
+   - Zero-blur canvas rendering with crisp SVG vector and high-resolution PNG assets.
+
+4. **Self-Healing Windows Launchers**:
+   - `start-luckydangle.bat` and `run-silent.vbs` auto-detect Node.js, auto-install dependencies (`npm install`), and auto-compile assets (`npm run build`) on first launch.
+   - Handles Windows paths with spaces (e.g. `C:\Users\John Doe\`) and any drive letter (`C:`, `D:`, `E:`).
+
+5. **Instant Audio for Global Hotkeys**:
+   - Configured with `autoplay-policy=no-user-gesture-required` so pressing <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> plays audio immediately, even while playing full-screen games or browsing in another app.
+
+6. **Direct-to-Desktop Click-Through**:
+   - Outside the charm cord, your mouse clicks pass through completely to underlying windows, browser tabs, or desktop icons. Hovering over the charm automatically captures cursor control.
 
 ---
 
@@ -109,14 +141,13 @@ Double-click [`run-silent.vbs`](run-silent.vbs) from File Explorer.
 
 #### Option B: One-Click Windows Batch Launcher 🚀
 Double-click [`start-luckydangle.bat`](start-luckydangle.bat) from File Explorer.  
-* A lightweight launcher script starts Electron and closes the console window automatically.
+* Automatically verifies dependencies, builds if necessary, and starts Electron detached.
 
 #### Option C: Terminal / Developer Mode 💻
 Run directly from your terminal:
 ```powershell
 npm start
 ```
-*(Or `node_modules\.bin\electron electron/main.cjs`)*
 
 ---
 
@@ -226,7 +257,7 @@ luckydangle/
 ├── overlay.html                # Transparent click-through screen overlay canvas
 ├── tray.html                   # Taskbar All-in-One Controller liquid-glass flyout interface
 ├── package.json                # Project dependencies, scripts, and build configuration
-├── start-luckydangle.bat       # One-click Windows batch launcher
+├── start-luckydangle.bat       # Self-healing Windows batch launcher
 ├── run-silent.vbs              # Silent background VBS launcher (no console window)
 ├── vite.config.js              # Vite multi-page build configuration
 └── README.md                   # Complete documentation & user guide
@@ -234,25 +265,16 @@ luckydangle/
 
 ---
 
-## 🔧 Development & Customization
+## 🔧 Troubleshooting & Common Windows Questions
 
-### Run in Local Development Mode:
-```powershell
-npm run dev
-```
-Open `http://localhost:5173/` in your browser to inspect the full Charm Gallery or `http://localhost:5173/overlay.html` to debug the physics canvas.
+### Q: The tray icon is inside the Windows overflow area (the `^` arrow on the taskbar).
+**A:** In Windows 10/11, new tray icons are sometimes tucked into the overflow tray chevron. Click the `^` icon near your clock, drag the Lucky Dangle icon directly onto your main taskbar, and it will stay permanently pinned there!
 
-### Build Production Bundle:
-```powershell
-npm run build
-```
-Generates optimized assets into the `dist/` directory used by Electron.
+### Q: The charm audio doesn't play when I press Ctrl+Shift+S inside a game.
+**A:** Ensure your sound is not muted in the taskbar flyout (`🔊 Sound ON`). Version 2.0 includes `autoplay-policy=no-user-gesture-required` so hotkeys trigger audio system-wide without requiring the app to take window focus.
 
-### Add / Customize Charms:
-1. Add your image asset to `public/charms/`.
-2. Register the charm name, description, bead configuration, and ritual in `src/charms.js`.
-3. Add a procedural audio synthesizer method in `src/audio.js`.
-4. Add a button in `tray.html` and register its label in `electron/main.cjs`.
+### Q: How do I completely close Lucky Dangle?
+**A:** Left-click the tray icon and click `✕ Exit`, or right-click the tray icon and select `❌ Exit Lucky Dangle`.
 
 ---
 

@@ -216,12 +216,18 @@ export class CharmManager {
             nodePath.join(__dirname, 'charms', filename),
             nodePath.join(__dirname, '../charms', filename),
             nodePath.join(__dirname, '../public/charms', filename),
+            nodePath.join(__dirname, '../dist/charms', filename),
             nodePath.join(process.cwd(), 'charms', filename),
             nodePath.join(process.cwd(), 'dist/charms', filename),
-            nodePath.join(process.cwd(), 'public/charms', filename),
-            'c:/luckydangle/charms/' + filename,
-            'c:/luckydangle/public/charms/' + filename
+            nodePath.join(process.cwd(), 'public/charms', filename)
           ];
+          if (process.resourcesPath) {
+            candidatePaths.push(
+              nodePath.join(process.resourcesPath, 'charms', filename),
+              nodePath.join(process.resourcesPath, 'app/charms', filename),
+              nodePath.join(process.resourcesPath, 'app/public/charms', filename)
+            );
+          }
 
           for (const p of candidatePaths) {
             if (nodeFs.existsSync(p)) {

@@ -1,11 +1,12 @@
 {
   "name": "luckydangle-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "start": "start \"\" node_modules\\electron\\dist\\electron.exe electron/main.cjs",
-    "detached": "start \"\" node_modules\\electron\\dist\\electron.exe electron/main.cjs",
+    "start": "electron electron/main.cjs",
+    "app": "cmd.exe /c start-luckydangle.bat",
+    "silent": "cscript //nologo run-silent.vbs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

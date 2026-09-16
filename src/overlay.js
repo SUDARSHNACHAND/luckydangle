@@ -90,6 +90,11 @@ class DesktopOverlayApp {
       this.recenter();
     });
 
+    this.ipcRenderer.on('display-changed', () => {
+      this.resize();
+      this.recenter();
+    });
+
     this.ipcRenderer.on('toggle-visibility', (event, state) => {
       this.visible = Boolean(state);
       this.canvas.style.display = this.visible ? 'block' : 'none';
@@ -123,7 +128,7 @@ class DesktopOverlayApp {
     if (!this.ipcRenderer) return;
     if (this.isIgnoringMouse !== shouldIgnore) {
       this.isIgnoringMouse = shouldIgnore;
-      this.ipcRenderer.send('set-ignore-mouse-events', shouldIgnore, { forward: true });
+      this.ipcRenderer.send('set-ignore-mouse-events', shouldIgnore);
     }
   }
 
