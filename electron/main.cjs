@@ -56,37 +56,55 @@ if (process.defaultApp) {
 }
 
 function createTray() {
-  const candidateIcons = [
-    path.join(__dirname, '../public/charms/nazar.png'),
-    path.join(__dirname, '../dist/charms/nazar.png'),
-    path.join(__dirname, '../charms/nazar.png')
-  ];
-  const iconPath = candidateIcons.find(p => fs.existsSync(p)) || candidateIcons[0];
-  let icon = nativeImage.createFromPath(iconPath);
-  if (!icon.isEmpty()) {
-    icon = icon.resize({ width: 16, height: 16 });
-  }
-  tray = new Tray(icon);
-  tray.setToolTip('Lucky Dangle - All-in-One Controller');
+  try {
+    const candidateIcons = [
+      path.join(app.getAppPath(), 'public/charms/nazar.png'),
+      path.join(app.getAppPath(), 'dist/charms/nazar.png'),
+      path.join(app.getAppPath(), 'charms/nazar.png'),
+      path.join(__dirname, '../public/charms/nazar.png'),
+      path.join(__dirname, '../dist/charms/nazar.png'),
+      path.join(__dirname, '../charms/nazar.png')
+    ];
+    const iconPath = candidateIcons.find(p => fs.existsSync(p)) || candidateIcons[0];
+    let icon = nativeImage.createFromPath(iconPath);
+    if (icon.isEmpty()) {
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#1d4ed8"/></svg>';
+      icon = nativeImage.createFromDataURL('data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64'));
+    } else {
+      icon = icon.resize({ width: 16, height: 16, quality: 'high' });
+    }
 
-  // Left-click on taskbar button toggles All-in-One controller flyout
-  tray.on('click', () => {
-    toggleTrayWindow();
-  });
+    if (tray && !tray.isDestroyed()) {
+      try { tray.destroy(); } catch (e) {}
+    }
 
-  // Right-click on taskbar button opens context menu
-  tray.on('right-click', () => {
+    tray = new Tray(icon);
+    tray.setToolTip('Lucky Dangle - All-in-One Controller');
+
+    // Left-click on taskbar button toggles All-in-One controller flyout
+    tray.on('click', () => {
+      toggleTrayWindow();
+    });
+
+    // Right-click on taskbar button opens context menu
+    tray.on('right-click', () => {
+      updateTrayMenu();
+      tray.popUpContextMenu();
+    });
+
+    // Double-click toggles charm visibility
+    tray.on('double-click', () => {
+      toggleOverlay();
+    });
+
     updateTrayMenu();
-    tray.popUpContextMenu();
-  });
-
-  // Double-click toggles charm visibility
-  tray.on('double-click', () => {
-    toggleOverlay();
-  });
-
-  updateTrayMenu();
-  createTrayWindow();
+    createTrayWindow();
+  } catch (err) {
+    console.warn('Tray creation warning, retrying in 2 seconds:', err);
+    setTimeout(() => {
+      if (!tray || tray.isDestroyed()) createTray();
+    }, 2000);
+  }
 }
 
 function updateTrayMenu() {
