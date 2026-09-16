@@ -273,6 +273,12 @@ luckydangle/
 ### Q: The charm audio doesn't play when I press Ctrl+Shift+S inside a game.
 **A:** Ensure your sound is not muted in the taskbar flyout (`🔊 Sound ON`). Version 2.0 includes `autoplay-policy=no-user-gesture-required` so hotkeys trigger audio system-wide without requiring the app to take window focus.
 
+### Q: I see `Lock file can not be created! Error code: 32` or `Access is denied (0x5)`.
+**A:** This happens when Lucky Dangle is already running in the background and another instance is started. Lucky Dangle is a single-instance Windows application. If an instance is already active in your taskbar system tray, starting another will safely focus and toggle your existing charm. Version 2.0 isolates its user data to `%APPDATA%\luckydangle-app` and disables shader disk cache collisions to prevent Windows file-sharing locks.
+
+### Q: What is the `npm warn allow-scripts` warning during `npm install`?
+**A:** On Node.js v24+ / npm v11+, npm introduces a script approval notice for packages containing native installation scripts (such as `electron` and `esbuild`). This is purely informational and does not impact app execution. You can run `npx @npmcli/config approve-scripts` or simply proceed with `npm run build` and `npm start`.
+
 ### Q: How do I completely close Lucky Dangle?
 **A:** Left-click the tray icon and click `✕ Exit`, or right-click the tray icon and select `❌ Exit Lucky Dangle`.
 

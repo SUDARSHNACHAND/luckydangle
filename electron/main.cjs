@@ -2,6 +2,16 @@ const { app, BrowserWindow, globalShortcut, Tray, Menu, ipcMain, screen, nativeI
 const path = require('path');
 const fs = require('fs');
 
+// Configure dedicated App Name and UserData directory to eliminate generic Electron conflicts
+app.name = 'luckydangle';
+try {
+  const customUserData = path.join(app.getPath('appData'), 'luckydangle-app');
+  if (!fs.existsSync(customUserData)) {
+    fs.mkdirSync(customUserData, { recursive: true });
+  }
+  app.setPath('userData', customUserData);
+} catch (e) {}
+
 // Enable GPU Hardware Acceleration for ultra-smooth 60+ FPS performance
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
 app.commandLine.appendSwitch('enable-gpu-rasterization');
@@ -9,6 +19,7 @@ app.commandLine.appendSwitch('enable-zero-copy');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 app.commandLine.appendSwitch('disable-background-timer-throttling');
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+app.commandLine.appendSwitch('disable-gpu-shader-disk-cache');
 
 let overlayWindow = null;
 let galleryWindow = null;
@@ -36,13 +47,15 @@ const RITUAL_LABELS = {
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-  app.quit();
+  console.log('[Lucky Dangle] Another instance is already running. Focusing screen charm...');
+  app.exit(0);
 } else {
   app.on('second-instance', () => {
     if (overlayWindow && !overlayWindow.isDestroyed()) {
       if (!overlayEnabled) toggleOverlay();
       sendToOverlay('trigger-ritual');
     }
+    toggleTrayWindow();
   });
 }
 
