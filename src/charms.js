@@ -52,6 +52,10 @@ export class CharmManager {
     this.bmwSpinning = false;
     this.bmwGlow = 0;
 
+    // Murugan Vel divine aura and golden radiance
+    this.veluAuraRadius = 0;
+    this.veluGlow = 0;
+
     // Saved custom emoji
     let savedEmoji = '🍀';
     try {
@@ -73,6 +77,13 @@ export class CharmManager {
         description: 'The iconic Bavarian roundel & propeller spinner. Flick or trigger ritual to rev the engine and spin at high RPM.',
         ritualName: 'Rev the engine',
         beads: { small: 'bmwCyan', big: 'bmwDarkBlue', bigSize: 13, accent: 'bmwRed' }
+      },
+      'murugan-vel': {
+        name: 'Murugan Vel (Sacred Spear)',
+        origin: 'Tamil Nadu / Ancient India',
+        description: 'The divine lance of Lord Murugan representing wisdom, courage, and triumph over obstacles.',
+        ritualName: 'Vetri Vel! (Harohara)',
+        beads: { small: 'gold', big: 'vermilion', bigSize: 13, accent: 'gold' }
       },
       'nimbu-mirchi': {
         name: 'Nimbu-mirchi',
@@ -150,6 +161,8 @@ export class CharmManager {
   async loadAssets() {
     const assetList = [
       'BMW.svg.webp',
+      'murugan vel.png',
+      'murugan-vel.png',
       'chinese-knot.png',
       'daruma.png',
       'drishti-bommai.png',
@@ -334,6 +347,17 @@ export class CharmManager {
         particles.burst(charmX, charmY, '#e21a22', 20);
         particles.burst(charmX, charmY, '#ffffff', 15);
       }
+    } else if (charmId === 'murugan-vel') {
+      this.veluGlow = 1.0;
+      this.veluAuraRadius = 140;
+      audioManager.playVeluSound();
+      if (particles) {
+        // Sacred golden radiance, vermilion kumkum, and vibhuti white
+        particles.burst(charmX, charmY, '#fbbf24', 30);
+        particles.burst(charmX, charmY, '#ef4444', 20);
+        particles.burst(charmX, charmY, '#f59e0b', 20);
+        particles.burst(charmX, charmY, '#ffffff', 15);
+      }
     }
   }
 
@@ -420,6 +444,16 @@ export class CharmManager {
       this.bmwGlow *= 0.94;
       if (this.bmwGlow < 0.01) this.bmwGlow = 0;
     }
+
+    // Murugan Vel aura and golden glow decay
+    if (this.veluAuraRadius > 0) {
+      this.veluAuraRadius *= 0.92;
+      if (this.veluAuraRadius < 1) this.veluAuraRadius = 0;
+    }
+    if (this.veluGlow > 0) {
+      this.veluGlow *= 0.93;
+      if (this.veluGlow < 0.01) this.veluGlow = 0;
+    }
   }
 
   render(ctx, physics) {
@@ -505,6 +539,8 @@ export class CharmManager {
       this.renderGhanta(ctx);
     } else if (id === 'bmw') {
       this.renderBMW(ctx);
+    } else if (id === 'murugan-vel') {
+      this.renderMuruganVel(ctx);
     } else if (id === 'custom') {
       this.renderCustomEmoji(ctx);
     }
@@ -709,6 +745,18 @@ export class CharmManager {
         grad.addColorStop(0, '#6b8ce0');
         grad.addColorStop(0.6, '#294294');
         grad.addColorStop(1, '#0a1447');
+      } else if (type === 'porscheRed') {
+        grad.addColorStop(0, '#f87171');
+        grad.addColorStop(0.5, '#dc2626');
+        grad.addColorStop(1, '#7f1d1d');
+      } else if (type === 'stuttgartBlack') {
+        grad.addColorStop(0, '#475569');
+        grad.addColorStop(0.5, '#0f172a');
+        grad.addColorStop(1, '#020617');
+      } else if (type === 'vermilion') {
+        grad.addColorStop(0, '#fca5a5');
+        grad.addColorStop(0.5, '#dc2626');
+        grad.addColorStop(1, '#881337');
       } else {
         grad.addColorStop(0, '#ffe685');
         grad.addColorStop(1, '#9e6b0a');
@@ -1014,6 +1062,81 @@ export class CharmManager {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.beginPath();
     ctx.ellipse(-radius * 0.28, centerY - radius * 0.32, radius * 0.38, radius * 0.16, -Math.PI / 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  renderMuruganVel(ctx) {
+    const img = this.images['murugan vel.png'] || this.images['murugan-vel.png'];
+
+    ctx.save();
+
+    // 1. Top Sacred Gold Attachment Ring connecting to cord at (0, 0)
+    const ringGrad = ctx.createRadialGradient(-1, -1, 1, 0, 0, 5);
+    ringGrad.addColorStop(0, '#fef08a');
+    ringGrad.addColorStop(0.5, '#eab308');
+    ringGrad.addColorStop(1, '#854d0e');
+    ctx.fillStyle = ringGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1e293b';
+    ctx.beginPath();
+    ctx.arc(0, 0, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Divine Radiance Aura when ritual activated
+    if (this.veluAuraRadius > 0) {
+      // Radiating warm golden & vermilion aura
+      const auraGrad = ctx.createRadialGradient(0, 45, 10, 0, 45, this.veluAuraRadius);
+      auraGrad.addColorStop(0, 'rgba(251, 191, 36, 0.55)');
+      auraGrad.addColorStop(0.5, 'rgba(239, 68, 68, 0.25)');
+      auraGrad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+      ctx.fillStyle = auraGrad;
+      ctx.beginPath();
+      ctx.arc(0, 45, this.veluAuraRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Concentric sacred energy ring
+      ctx.strokeStyle = `rgba(254, 240, 138, ${Math.min(1, this.veluAuraRadius / 80)})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 45, this.veluAuraRadius * 0.65, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // 3. Sacred Golden Vel Image
+    if (img) {
+      const targetHeight = 115;
+      const aspect = (img.naturalWidth && img.naturalHeight) ? (img.naturalWidth / img.naturalHeight) : 0.6;
+      const targetWidth = Math.min(85, Math.max(50, targetHeight * aspect));
+
+      if (this.veluGlow > 0) {
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 24 * this.veluGlow;
+      }
+
+      ctx.drawImage(img, -targetWidth / 2, 2, targetWidth, targetHeight);
+    } else {
+      // Procedural fallback Vel if image is pending
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(0, 2);
+      ctx.bezierCurveTo(-22, 25, -28, 55, -12, 75);
+      ctx.lineTo(-4, 75);
+      ctx.lineTo(-4, 115);
+      ctx.lineTo(4, 115);
+      ctx.lineTo(4, 75);
+      ctx.lineTo(12, 75);
+      ctx.bezierCurveTo(28, 55, 22, 25, 0, 2);
+      ctx.fill();
+    }
+
+    // 4. Subtle divine tip gleam
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.beginPath();
+    ctx.arc(0, 12, 2.5, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();

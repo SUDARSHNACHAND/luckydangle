@@ -346,6 +346,91 @@ export class DangleAudio {
     whiteNoise.stop(t + 0.7);
   }
 
+  // 9. Murugan Vel (Sacred Spear): Sacred Shankha (conch) blast + temple bell harmonics + divine spear flash
+  playVeluSound() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+
+    // 1. Shankha (Sacred Conch) Horn Resonance (Rich warm brassy drone rising in power)
+    const oscConch1 = this.ctx.createOscillator();
+    const oscConch2 = this.ctx.createOscillator();
+    const filterConch = this.ctx.createBiquadFilter();
+    const gainConch = this.ctx.createGain();
+
+    oscConch1.type = 'sawtooth';
+    oscConch2.type = 'triangle';
+
+    // Fundamental note: sacred D (293.66 Hz) sliding to A (440 Hz) with gentle vibrato
+    oscConch1.frequency.setValueAtTime(293.66, t);
+    oscConch1.frequency.exponentialRampToValueAtTime(440.0, t + 0.55);
+    oscConch1.frequency.exponentialRampToValueAtTime(329.63, t + 2.0);
+
+    oscConch2.frequency.setValueAtTime(587.33, t); // Octave overtone
+    oscConch2.frequency.exponentialRampToValueAtTime(880.0, t + 0.55);
+    oscConch2.frequency.exponentialRampToValueAtTime(659.25, t + 2.0);
+
+    filterConch.type = 'bandpass';
+    filterConch.frequency.setValueAtTime(650, t);
+    filterConch.frequency.exponentialRampToValueAtTime(1200, t + 0.55);
+    filterConch.frequency.exponentialRampToValueAtTime(700, t + 2.0);
+    filterConch.Q.setValueAtTime(3.0, t);
+
+    gainConch.gain.setValueAtTime(0.001, t);
+    gainConch.gain.linearRampToValueAtTime(0.28, t + 0.25);
+    gainConch.gain.setValueAtTime(0.28, t + 0.7);
+    gainConch.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+
+    oscConch1.connect(filterConch);
+    oscConch2.connect(filterConch);
+    filterConch.connect(gainConch);
+    gainConch.connect(this.ctx.destination);
+
+    oscConch1.start(t);
+    oscConch2.start(t);
+    oscConch1.stop(t + 2.4);
+    oscConch2.stop(t + 2.4);
+
+    // 2. Sacred Temple Ghanta & Manjira (Brass cymbals) resonant shimmer
+    const chimeFreqs = [587.33, 880.0, 1174.66, 1760.0, 2349.32];
+    chimeFreqs.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const startTime = t + 0.05 + idx * 0.04;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.22 / (idx + 1), startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.8);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + 2.8);
+    });
+
+    // 3. Divine Spear "Vetri Vel" Golden Shimmer & Flash
+    const oscSpear = this.ctx.createOscillator();
+    const gainSpear = this.ctx.createGain();
+    oscSpear.type = 'triangle';
+    oscSpear.frequency.setValueAtTime(1400, t);
+    oscSpear.frequency.exponentialRampToValueAtTime(420, t + 0.45);
+
+    gainSpear.gain.setValueAtTime(0.2, t);
+    gainSpear.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+
+    oscSpear.connect(gainSpear);
+    gainSpear.connect(this.ctx.destination);
+
+    oscSpear.start(t);
+    oscSpear.stop(t + 0.45);
+  }
+
+
   // Cord sway sound
   playSway() {
     if (this.muted) return;

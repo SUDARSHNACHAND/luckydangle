@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucky Dangle - Taskbar Controller</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* All-in-One Liquid Glass Card */
+    .aio-card {
+      width: 336px;
+      background: linear-gradient(145deg, rgba(20, 26, 42, 0.96) 0%, rgba(10, 14, 26, 0.98) 100%);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.78),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+      animation: aioFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes aioFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Menu Header */
+    .aio-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 9px;
+    }
+
+    .aio-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .aio-brand-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    .aio-brand-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+    }
+
+    .aio-active-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.25);
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      color: #93c5fd;
+      white-space: nowrap;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .aio-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .aio-close-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Section Labels */
+    .aio-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    /* Charm Switcher Grid */
+    .aio-charms-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+
+    .aio-charm-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 1.15rem;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .aio-charm-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px) scale(1.06);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .aio-charm-btn.active {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 
+        0 4px 12px rgba(37, 99, 235, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      transform: translateY(-1px) scale(1.05);
+    }
+
+    /* Primary Dynamic Ritual Action Button */
+    .aio-ritual-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 
+        0 4px 14px rgba(245, 158, 11, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .aio-ritual-btn:hover {
+      background: linear-gradient(135deg, #fbbf24 0%, #ea580c 100%);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 6px 20px rgba(245, 158, 11, 0.55),
+        inset 0 1px 2px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Action Controls 2-column row */
+    .aio-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .aio-pill-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #e2e8f0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 7px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .aio-pill-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .aio-pill-btn.muted {
+      background: rgba(239, 68, 68, 0.22);
+      border-color: rgba(248, 113, 113, 0.4);
+      color: #fca5a5;
+    }
+
+    .aio-pill-btn.muted:hover {
+      background: rgba(239, 68, 68, 0.35);
+      color: #ffffff;
+    }
+
+    /* Footer Utility Row */
+    .aio-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+    }
+
+    .aio-link-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .aio-link-btn:hover {
+      color: #60a5fa;
+      background: rgba(96, 165, 250, 0.12);
+    }
+
+    .aio-link-btn.danger:hover {
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    /* Shortcuts Hint */
+    .aio-hints {
+      font-size: 0.64rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .aio-hints kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-family: inherit;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="aio-card" id="aio-card">
+    <!-- Header -->
+    <div class="aio-header">
+      <div class="aio-brand">
+        <div class="aio-brand-icon">
+          <!-- Nazar Evil Eye SVG Vector -->
+          <svg viewBox="0 0 32 32" width="20" height="20">
+            <circle cx="16" cy="16" r="15" fill="#1d4ed8" stroke="#60a5fa" stroke-width="1.2"/>
+            <circle cx="16" cy="16" r="10.5" fill="#ffffff"/>
+            <circle cx="16" cy="16" r="6.5" fill="#38bdf8"/>
+            <circle cx="16" cy="16" r="3.2" fill="#090d16"/>
+            <circle cx="14.8" cy="14.8" r="1.1" fill="#ffffff"/>
+          </svg>
+        </div>
+        <span class="aio-brand-title">Lucky Dangle</span>
+      </div>
+      <div class="aio-active-tag" id="aio-active-tag">BMW Spinner</div>
+      <button class="aio-close-btn" id="aio-close-btn" title="Close">✕</button>
+    </div>
+
+    <!-- Select Charm Grid -->
+    <div>
+      <div class="aio-section-label">Select Charm</div>
+      <div class="aio-charms-grid">
+        <!-- BMW Spinner -->
+        <button class="aio-charm-btn active" data-charm="bmw" title="BMW Symbol Spinner">
+          <svg viewBox="0 0 24 24" width="20" height="20" style="display:inline-block; vertical-align:middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));">
+            <circle cx="12" cy="12" r="11" fill="#050505" stroke="#e2e8f0" stroke-width="0.9"/>
+            <circle cx="12" cy="12" r="7.5" fill="#ffffff" stroke="#94a3b8" stroke-width="0.5"/>
+            <path d="M12,12 L12,4.5 A7.5,7.5 0 0,0 4.5,12 Z" fill="#0066b1"/>
+            <path d="M12,12 L12,19.5 A7.5,7.5 0 0,0 19.5,12 Z" fill="#0066b1"/>
+            <line x1="4.5" y1="12" x2="19.5" y2="12" stroke="#334155" stroke-width="0.6"/>
+            <line x1="12" y1="4.5" x2="12" y2="19.5" stroke="#334155" stroke-width="0.6"/>
+          </svg>
+        </button>
+        <!-- Murugan Vel -->
+        <button class="aio-charm-btn" data-charm="murugan-vel" title="Murugan Vel (Sacred Spear)">
+          <svg viewBox="0 0 24 24" width="20" height="20" style="display:inline-block; vertical-align:middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));">
+            <path d="M12,1.5 C10,5.5 6.5,8 6.5,12 C6.5,15 9.5,16.5 11,17 L11,22.5 L13,22.5 L13,17 C14.5,16.5 17.5,15 17.5,12 C17.5,8 14,5.5 12,1.5 Z" fill="#f59e0b" stroke="#fef08a" stroke-width="0.9"/>
+            <line x1="12" y1="5" x2="12" y2="15" stroke="#ef4444" stroke-width="1.2"/>
+            <circle cx="12" cy="7" r="1.1" fill="#ffffff"/>
+          </svg>
+        </button>
+        <!-- Nimbu Mirchi -->
+        <button class="aio-charm-btn" data-charm="nimbu-mirchi" title="Nimbu-mirchi (Garland)">🌶️</button>
+        <!-- Maneki Neko -->
+        <button class="aio-charm-btn" data-charm="maneki-neko" title="Maneki-neko (Beckoning Cat)">🐱</button>
+        <!-- Daruma -->
+        <button class="aio-charm-btn" data-charm="daruma" title="Daruma (Wishing Doll)">🎯</button>
+        <!-- Drishti Bommai -->
+        <button class="aio-charm-btn" data-charm="drishti-bommai" title="Drishti bommai (Guardian)">👹</button>
+        <!-- Chinese Knot -->
+        <button class="aio-charm-btn" data-charm="chinese-knot" title="Páncháng jié (Chinese Knot)">🏮</button>
+        <!-- Himmeli -->
+        <button class="aio-charm-btn" data-charm="himmeli" title="Himmeli (Geometric Mobile)">🌾</button>
+        <!-- Hamsa -->
+        <button class="aio-charm-btn" data-charm="hamsa" title="Hamsa (Protection Palm)">✋</button>
+        <!-- Nazar -->
+        <button class="aio-charm-btn" data-charm="nazar" title="Nazar boncuğu (Evil Eye)">🧿</button>
+        <!-- Ghanta -->
+        <button class="aio-charm-btn" data-charm="ghanta" title="Ghanta (Temple Bell)">🔔</button>
+        <!-- Custom Emoji -->
+        <button class="aio-charm-btn" data-charm="custom" title="Custom Emoji">🍀</button>
+      </div>
+    </div>
+
+    <!-- Primary Dynamic Ritual Button -->
+    <button class="aio-ritual-btn" id="aio-ritual-btn" title="Perform Charm Ritual (S)">
+      <span id="aio-ritual-label">🏎️ Rev the engine</span>
+    </button>
+
+    <!-- Action Buttons Row -->
+    <div class="aio-action-row">
+      <button class="aio-pill-btn" id="aio-sound-btn" title="Toggle Sound (M)">
+        <span id="aio-sound-icon">🔊</span>
+        <span id="aio-sound-text">Sound ON</span>
+      </button>
+      <button class="aio-pill-btn" id="aio-recenter-btn" title="Re-center Charm (R)">
+        <span>📍</span>
+        <span>Re-center</span>
+      </button>
+    </div>
+
+    <!-- Footer Utility Links -->
+    <div class="aio-footer-row">
+      <button class="aio-link-btn" id="aio-gallery-btn" title="Open Full Charm Gallery">
+        <span>📖</span>
+        <span>Gallery</span>
+      </button>
+      <button class="aio-link-btn" id="aio-hide-btn" title="Hide Screen Charm (Ctrl+D)">
+        <span id="aio-hide-icon">👁️</span>
+        <span id="aio-hide-text">Hide</span>
+      </button>
+      <button class="aio-link-btn danger" id="aio-exit-btn" title="Exit Lucky Dangle">
+        <span>❌</span>
+        <span>Exit</span>
+      </button>
+    </div>
+
+    <!-- Shortcuts Hint -->
+    <div class="aio-hints">
+      <kbd>S</kbd> Ritual &nbsp;•&nbsp; <kbd>M</kbd> Sound &nbsp;•&nbsp; <kbd>R</kbd> Center &nbsp;•&nbsp; <kbd>Ctrl+D</kbd> Toggle
+    </div>
+  </div>
+
+  <script type="module" src="./src/tray.js"></script>
+</body>
+</html>

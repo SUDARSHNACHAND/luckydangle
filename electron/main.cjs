@@ -11,9 +11,26 @@ app.commandLine.appendSwitch('disable-background-timer-throttling');
 
 let overlayWindow = null;
 let galleryWindow = null;
+let trayWindow = null;
 let tray = null;
 let overlayEnabled = true;
 let soundMuted = false;
+let activeCharmId = 'bmw';
+
+const RITUAL_LABELS = {
+  'bmw': '🏎️ Rev the engine (Ctrl+Shift+S)',
+  'murugan-vel': '✨ Vetri Vel! (Ctrl+Shift+S)',
+  'nimbu-mirchi': '🌶️ Hang fresh garland (Ctrl+Shift+S)',
+  'maneki-neko': '🐱 Beckon good fortune (Ctrl+Shift+S)',
+  'daruma': '✨ Make a wish (Ctrl+Shift+S)',
+  'drishti-bommai': '👹 Repaint guardian (Ctrl+Shift+S)',
+  'chinese-knot': '🏮 Tie in good fortune (Ctrl+Shift+S)',
+  'himmeli': '🌾 Set it turning (Ctrl+Shift+S)',
+  'hamsa': '✋ Receive blessing (Ctrl+Shift+S)',
+  'nazar': '🧿 Ward off evil eye (Ctrl+Shift+S)',
+  'ghanta': '🔔 Ring temple bell (Ctrl+Shift+S)',
+  'custom': '🍀 Bless custom charm (Ctrl+Shift+S)'
+};
 
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -49,26 +66,39 @@ function createTray() {
     icon = icon.resize({ width: 16, height: 16 });
   }
   tray = new Tray(icon);
-  tray.setToolTip('Lucky Dangle - Windows Screen Charm');
+  tray.setToolTip('Lucky Dangle - All-in-One Controller');
+
+  // Left-click on taskbar button toggles All-in-One controller flyout
+  tray.on('click', () => {
+    toggleTrayWindow();
+  });
+
+  // Right-click on taskbar button opens context menu
+  tray.on('right-click', () => {
+    updateTrayMenu();
+    tray.popUpContextMenu();
+  });
+
+  // Double-click toggles charm visibility
+  tray.on('double-click', () => {
+    toggleOverlay();
+  });
 
   updateTrayMenu();
+  createTrayWindow();
 }
 
 function updateTrayMenu() {
+  const ritualLabel = RITUAL_LABELS[activeCharmId] || '✨ Perform Ritual (Ctrl+Shift+S)';
+
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Lucky Dangle v1.0',
-      enabled: false
+      label: '🎛️ All-in-One Controller (Click tray icon)',
+      click: () => toggleTrayWindow()
     },
     { type: 'separator' },
     {
-      label: overlayEnabled ? '👁️ Disable Screen Charm (Ctrl+Shift+D)' : '👁️ Enable Screen Charm (Ctrl+Shift+D)',
-      type: 'checkbox',
-      checked: overlayEnabled,
-      click: () => toggleOverlay()
-    },
-    {
-      label: '✨ Perform Charm Ritual (Ctrl+Shift+S)',
+      label: ritualLabel,
       click: () => sendToOverlay('trigger-ritual')
     },
     {
@@ -76,29 +106,37 @@ function updateTrayMenu() {
       click: () => sendToOverlay('recenter-charm')
     },
     {
-      label: soundMuted ? '🔇 Sound: OFF (Click to Turn ON)' : '🔊 Sound: ON (Click to Turn OFF)',
+      label: soundMuted ? '🔇 Sound: OFF (Click to turn ON)' : '🔊 Sound: ON (Click to turn OFF)',
       click: () => sendToOverlay('toggle-sound')
     },
     {
-      label: '📖 Open Charm Gallery...',
-      click: () => openGalleryWindow()
+      label: overlayEnabled ? '👁️ Hide Screen Charm (Ctrl+D)' : '👁️ Show Screen Charm (Ctrl+D)',
+      type: 'checkbox',
+      checked: overlayEnabled,
+      click: () => toggleOverlay()
     },
     { type: 'separator' },
     {
       label: '🎯 Choose Screen Charm',
       submenu: [
-        { label: '🏎️ BMW Symbol Spinner', click: () => selectCharm('bmw') },
-        { label: '🌶️ Nimbu-mirchi', click: () => selectCharm('nimbu-mirchi') },
-        { label: '🐱 Maneki-neko (Beckoning Cat)', click: () => selectCharm('maneki-neko') },
-        { label: '🎯 Daruma (Wishing Doll)', click: () => selectCharm('daruma') },
-        { label: '👹 Drishti bommai', click: () => selectCharm('drishti-bommai') },
-        { label: '🏮 Páncháng jié (Chinese Knot)', click: () => selectCharm('chinese-knot') },
-        { label: '🌾 Himmeli (Geometric Mobile)', click: () => selectCharm('himmeli') },
-        { label: '✋ Hamsa', click: () => selectCharm('hamsa') },
-        { label: '🧿 Nazar boncuğu', click: () => selectCharm('nazar') },
-        { label: '🔔 Ghanta (Bell)', click: () => selectCharm('ghanta') },
-        { label: '🍀 Custom Emoji', click: () => selectCharm('custom') }
+        { label: '🏎️ BMW Symbol Spinner', type: 'radio', checked: activeCharmId === 'bmw', click: () => selectCharm('bmw') },
+        { label: '🔱 Murugan Vel (Sacred Spear)', type: 'radio', checked: activeCharmId === 'murugan-vel', click: () => selectCharm('murugan-vel') },
+        { label: '🌶️ Nimbu-mirchi', type: 'radio', checked: activeCharmId === 'nimbu-mirchi', click: () => selectCharm('nimbu-mirchi') },
+        { label: '🐱 Maneki-neko (Beckoning Cat)', type: 'radio', checked: activeCharmId === 'maneki-neko', click: () => selectCharm('maneki-neko') },
+        { label: '🎯 Daruma (Wishing Doll)', type: 'radio', checked: activeCharmId === 'daruma', click: () => selectCharm('daruma') },
+        { label: '👹 Drishti bommai', type: 'radio', checked: activeCharmId === 'drishti-bommai', click: () => selectCharm('drishti-bommai') },
+        { label: '🏮 Páncháng jié (Chinese Knot)', type: 'radio', checked: activeCharmId === 'chinese-knot', click: () => selectCharm('chinese-knot') },
+        { label: '🌾 Himmeli (Geometric Mobile)', type: 'radio', checked: activeCharmId === 'himmeli', click: () => selectCharm('himmeli') },
+        { label: '✋ Hamsa', type: 'radio', checked: activeCharmId === 'hamsa', click: () => selectCharm('hamsa') },
+        { label: '🧿 Nazar boncuğu', type: 'radio', checked: activeCharmId === 'nazar', click: () => selectCharm('nazar') },
+        { label: '🔔 Ghanta (Bell)', type: 'radio', checked: activeCharmId === 'ghanta', click: () => selectCharm('ghanta') },
+        { label: '🍀 Custom Emoji', type: 'radio', checked: activeCharmId === 'custom', click: () => selectCharm('custom') }
       ]
+    },
+    { type: 'separator' },
+    {
+      label: '📖 Open Charm Gallery...',
+      click: () => openGalleryWindow()
     },
     { type: 'separator' },
     {
@@ -110,6 +148,87 @@ function updateTrayMenu() {
   tray.setContextMenu(contextMenu);
 }
 
+function createTrayWindow() {
+  if (trayWindow && !trayWindow.isDestroyed()) return;
+
+  trayWindow = new BrowserWindow({
+    width: 356,
+    height: 490,
+    show: false,
+    frame: false,
+    resizable: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    transparent: true,
+    backgroundColor: '#00000000',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  const trayDistPath = path.join(__dirname, '../dist/tray.html');
+  if (fs.existsSync(trayDistPath)) {
+    trayWindow.loadFile(trayDistPath);
+  } else {
+    trayWindow.loadFile(path.join(__dirname, '../tray.html'));
+  }
+
+  // Dismiss flyout when clicking outside
+  trayWindow.on('blur', () => {
+    if (trayWindow && !trayWindow.isDestroyed() && trayWindow.isVisible()) {
+      trayWindow.hide();
+    }
+  });
+}
+
+function positionTrayWindow() {
+  if (!tray || !trayWindow || trayWindow.isDestroyed()) return;
+  const trayBounds = tray.getBounds();
+  const windowBounds = trayWindow.getBounds();
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: screenWidth, height: screenHeight, x: screenX, y: screenY } = primaryDisplay.workArea;
+
+  // Center horizontally over tray icon, clamped inside screen
+  let x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2));
+  x = Math.max(screenX + 8, Math.min(x, screenX + screenWidth - windowBounds.width - 8));
+
+  // Position vertically above taskbar
+  let y = Math.round(trayBounds.y - windowBounds.height - 8);
+  if (y < screenY + 8) {
+    // Taskbar is at top of screen
+    y = Math.round(trayBounds.y + trayBounds.height + 8);
+  }
+  y = Math.max(screenY + 8, Math.min(y, screenY + screenHeight - windowBounds.height - 8));
+
+  trayWindow.setPosition(x, y, false);
+}
+
+function toggleTrayWindow() {
+  if (!trayWindow || trayWindow.isDestroyed()) {
+    createTrayWindow();
+  }
+
+  if (trayWindow.isVisible()) {
+    trayWindow.hide();
+  } else {
+    positionTrayWindow();
+    trayWindow.show();
+    trayWindow.focus();
+    sendStateToTrayWindow();
+  }
+}
+
+function sendStateToTrayWindow() {
+  if (trayWindow && !trayWindow.isDestroyed() && trayWindow.webContents) {
+    trayWindow.webContents.send('state-sync', {
+      activeCharmId,
+      soundMuted,
+      overlayEnabled
+    });
+  }
+}
+
 function sendToOverlay(channel, data) {
   if (overlayWindow && !overlayWindow.isDestroyed() && overlayWindow.webContents) {
     overlayWindow.webContents.send(channel, data);
@@ -117,7 +236,10 @@ function sendToOverlay(channel, data) {
 }
 
 function selectCharm(charmId) {
+  activeCharmId = charmId;
   sendToOverlay('switch-charm', charmId);
+  sendStateToTrayWindow();
+  updateTrayMenu();
 }
 
 function toggleOverlay() {
@@ -134,6 +256,7 @@ function toggleOverlay() {
     sendToOverlay('toggle-visibility', false);
   }
 
+  sendStateToTrayWindow();
   updateTrayMenu();
 }
 
@@ -178,7 +301,13 @@ function createOverlayWindow() {
   });
 
   ipcMain.on('switch-charm', (event, charmId) => {
-    sendToOverlay('switch-charm', charmId);
+    selectCharm(charmId);
+  });
+
+  ipcMain.on('charm-changed', (event, charmId) => {
+    activeCharmId = charmId;
+    sendStateToTrayWindow();
+    updateTrayMenu();
   });
 
   ipcMain.on('trigger-ritual', () => {
@@ -189,8 +318,48 @@ function createOverlayWindow() {
     toggleOverlay();
   });
 
+  ipcMain.on('toggle-sound', () => {
+    sendToOverlay('toggle-sound');
+  });
+
+  ipcMain.on('recenter-charm', () => {
+    sendToOverlay('recenter-charm');
+  });
+
   ipcMain.on('sound-state-changed', (event, muted) => {
     soundMuted = muted;
+    sendStateToTrayWindow();
+    updateTrayMenu();
+  });
+
+  ipcMain.on('request-state', (event) => {
+    event.sender.send('state-sync', {
+      activeCharmId,
+      soundMuted,
+      overlayEnabled
+    });
+  });
+
+  ipcMain.on('open-gallery', () => {
+    openGalleryWindow();
+  });
+
+  ipcMain.on('close-tray-window', () => {
+    if (trayWindow && !trayWindow.isDestroyed()) {
+      trayWindow.hide();
+    }
+  });
+
+  ipcMain.on('quit-app', () => {
+    app.quit();
+  });
+
+  ipcMain.on('overlay-ready', (event, data) => {
+    if (data) {
+      if (data.charmId) activeCharmId = data.charmId;
+      if (data.soundMuted !== undefined) soundMuted = data.soundMuted;
+    }
+    sendStateToTrayWindow();
     updateTrayMenu();
   });
 
