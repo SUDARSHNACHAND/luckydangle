@@ -1,107 +1,202 @@
-# Lucky Dangle 🧿✨
+# Lucky Dangle 🧿✨ (v2.0)
 
-> **Interactive Screen Charms for Windows PC**  
-> Hang traditional lucky charms, spinners, and talismans from the top of your display with authentic spring-mass physics, liquid glass controls, and genuine rituals.
+> **Interactive Cultural Screen Charms & Spinners for Windows PC**  
+> Hang traditional lucky charms, spinners, and talismans from the top of your display with authentic spring-mass physics, procedural Web Audio rituals, and a sleek **All-in-One Taskbar Controller** that keeps your screen 100% clean and unobstructed.
 
-![OS Support: Windows Only](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white)
-![Node Version](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
-![Framework](https://img.shields.io/badge/Electron-33-47848F?logo=electron&logoColor=white)
-![Styling](https://img.shields.io/badge/UI-Liquid%20Glass-8ba3f8)
+[![Version](https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge)](https://github.com/SUDARSHNACHAND/luckydangle)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SUDARSHNACHAND/luckydangle)
+[![Runtime](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Framework](https://img.shields.io/badge/Electron-33-47848F?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![UI Style](https://img.shields.io/badge/UI-Liquid%20Glass%20%26%20Tray%20Flyout-8ba3f8?style=for-the-badge)](https://github.com/SUDARSHNACHAND/luckydangle)
+
+---
+
+## 📑 Table of Contents
+
+- [🌟 What's New in Version 2.0](#-whats-new-in-version-20)
+- [🖥️ System Requirements](#️-system-requirements)
+- [🚀 How to Start on Windows (Step-by-Step)](#-how-to-start-on-windows-step-by-step)
+  - [1. Prerequisites](#1-prerequisites)
+  - [2. Clone Repository](#2-clone-repository)
+  - [3. Install Dependencies](#3-install-dependencies)
+  - [4. Build Assets](#4-build-assets)
+  - [5. Launch Options](#5-launch-options)
+  - [6. Optional: Start Automatically with Windows](#6-optional-start-automatically-with-windows)
+- [🎛️ All-in-One Taskbar Controller](#️-all-in-one-taskbar-controller)
+- [🧿 Complete Charms & Rituals Roster (12 Charms)](#-complete-charms--rituals-roster-12-charms)
+- [⌨️ Global Keyboard Shortcuts & Mouse Controls](#️-global-keyboard-shortcuts--mouse-controls)
+- [🛠️ Project Structure](#️-project-structure)
+- [🔧 Development & Customization](#-development--customization)
+- [📜 License](#-license)
+
+---
+
+## 🌟 What's New in Version 2.0
+
+* 🎛️ **All-in-One Taskbar Controller**:
+  - The old floating on-screen controller bar has been **completely eliminated**.
+  - All charm selection, dynamic rituals, sound toggles, and settings are housed inside a gorgeous **liquid-glass flyout** anchored directly to your Windows System Tray (Taskbar Notification Area).
+  - Your desktop stays completely clean, immersive, and 100% click-through outside the charm itself.
+
+* 🔱 **Murugan Vel Charm (Sacred Spear)**:
+  - Added the divine lance of Lord Murugan representing wisdom, courage, and triumph over obstacles.
+  - Features the authentic multi-layered **Velu Sound** synthesizer: sacred Shankha (conch shell) drone sweeping upward, resonant 5-part brass temple bells (*Ghanta & Manjira*), and a high-frequency golden spear gleam.
+  - Interactive ritual radiates concentric golden & vermilion energy rings with sacred vibhuti and kumkum particle bursts.
+
+* 🏎️ **BMW Symbol Spinner**:
+  - The iconic Bavarian roundel & propeller spinner with authentic drag/flick rotation physics, inertia, high-RPM motion blur arcs, M-Power cord beads (Cyan, Blue, Red), and engine acceleration rev audio.
+
+* 📐 **Symmetrical 12-Charm Layout**:
+  - Exactly 12 authentic, high-definition charms arranged in a symmetrical 2-row × 6-column quick-select grid.
+
+* ⚡ **Ultra-Smooth 60+ FPS Engine**:
+  - GPU hardware-accelerated canvas rendering (`ignore-gpu-blocklist`, `enable-zero-copy`, `enable-gpu-rasterization`).
 
 ---
 
 ## 🖥️ System Requirements
-* **Operating System**: Windows 10 or Windows 11 (64-bit) — *Exclusively built and optimized for Windows Desktop*.
-* **Runtime**: [Node.js](https://nodejs.org/) v18.0.0 or higher.
-* **Display**: Any standard or high-DPI display, single or multi-monitor setups.
+
+* **Operating System**: Windows 10 or Windows 11 (64-bit) — *Built and tailored for Windows Desktop*.
+* **Runtime**: [Node.js](https://nodejs.org/) v18.0.0 or higher (LTS recommended).
+* **Display**: Standard or High-DPI displays (4K, UltraWide, Multi-Monitor setups fully supported).
+* **Audio**: Any standard stereo audio device (uses Web Audio API procedural synthesis with zero external audio files).
 
 ---
 
-## 🚀 Installation & Setup Instructions
+## 🚀 How to Start on Windows (Step-by-Step)
 
-### 1. Clone the Private Repository
-Open **PowerShell** or **Command Prompt** and clone your private repository:
+Follow these simple steps to download, install, and run Lucky Dangle on your Windows PC:
+
+### 1. Prerequisites
+Ensure you have **Node.js** and **Git** installed on Windows:
+* Download Node.js: [https://nodejs.org/](https://nodejs.org/) (Choose LTS).
+* Download Git: [https://git-scm.com/download/win](https://git-scm.com/download/win).
+
+Verify installation by opening **PowerShell** or **Command Prompt** and running:
+```powershell
+node -v
+npm -v
+git --version
+```
+
+### 2. Clone Repository
+Open PowerShell or Windows Terminal in your desired folder:
 ```powershell
 git clone https://github.com/SUDARSHNACHAND/luckydangle.git
 cd luckydangle
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
+Install all required Node.js and Electron packages:
 ```powershell
 npm install
 ```
 
-### 3. Build the Distribution Assets
-Compile the liquid glass interface and physics engines:
+### 4. Build Assets
+Compile the Vite web bundle and production distribution assets:
 ```powershell
 npm run build
 ```
 
-### 4. Launch Lucky Dangle
-Choose your preferred launch method:
+### 5. Launch Options
+You can start Lucky Dangle using whichever method fits your workflow:
 
-* **Standard Terminal Launch**:
-  ```powershell
-  npm start
-  ```
-* **One-Click Windows Launcher**:
-  Double-click [`start-luckydangle.bat`](start-luckydangle.bat) from File Explorer.
-* **Silent Background Launch (No Terminal Window)**:
-  Double-click [`run-silent.vbs`](run-silent.vbs). Lucky Dangle will quietly appear at the top of your screen and dock into your Windows System Tray.
+#### Option A: Silent Background Launch (Recommended for Daily Use) 🔕
+Double-click [`run-silent.vbs`](run-silent.vbs) from File Explorer.  
+* Lucky Dangle will start silently in the background.
+* No black terminal or command prompt window stays open!
+* The charm cord dangles from the top center of your screen, and the Lucky Dangle icon docks into your Windows Taskbar System Tray.
+
+#### Option B: One-Click Windows Batch Launcher 🚀
+Double-click [`start-luckydangle.bat`](start-luckydangle.bat) from File Explorer.  
+* A lightweight launcher script starts Electron and closes the console window automatically.
+
+#### Option C: Terminal / Developer Mode 💻
+Run directly from your terminal:
+```powershell
+npm start
+```
+*(Or `node_modules\.bin\electron electron/main.cjs`)*
 
 ---
 
-## 💎 Liquid Glass Interface & Features
+### 6. Optional: Start Automatically with Windows
+
+To have Lucky Dangle automatically launch every time you log into Windows:
+1. Press <kbd>Win</kbd> + <kbd>R</kbd> on your keyboard to open the **Run** dialog.
+2. Type `shell:startup` and click **OK**. (This opens your Windows Startup folder: `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`).
+3. Right-click inside the folder, select **New** > **Shortcut**.
+4. Click **Browse...** and navigate to your `luckydangle` folder.
+5. Select [`run-silent.vbs`](run-silent.vbs) and click **Finish**.
+6. That's it! Lucky Dangle will now start silently upon Windows boot.
+
+---
+
+## 🎛️ All-in-One Taskbar Controller
+
+Lucky Dangle 2.0 introduces a **zero-clutter desktop philosophy**. There are no on-screen floating buttons obstructing your work or games. Everything is accessible via the **Taskbar System Tray Icon**:
 
 ```
-  ┌────────────────────────────────────────────────────────────────────────────────────────┐
-  │  🏎️  🌶️  🐱  🎯  👹  🏮  🌾  ✋  🧿  🔔  🍀  │  ✨ Rev the engine  │  🔊 Sound ON  │
-  └────────────────────────────────────────────────────────────────────────────────────────┘
-                       ▲                                      ▲                  ▲
-                 Model Switcher                         Active Ritual       Sound Toggle
+      ┌─────────────────────────────────────────────────────────┐
+      │  🧿 Lucky Dangle         [ BMW Spinner ]           ✕   │
+      ├─────────────────────────────────────────────────────────┤
+      │  SELECT CHARM                                           │
+      │  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐              │
+      │  │🏎️  │ │🔱  │ │🌶️  │ │🐱  │ │🎯  │ │👹  │  (Row 1)    │
+      │  └────┘ └────┘ └────┘ └────┘ └────┘ └────┘              │
+      │  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐              │
+      │  │🏮  │ │🌾  │ │✋  │ │🧿  │ │🔔  │ │🍀  │  (Row 2)    │
+      │  └────┘ └────┘ └────┘ └────┘ └────┘ └────┘              │
+      ├─────────────────────────────────────────────────────────┤
+      │  ⚡ Rev the engine           │  🔊 Sound ON             │
+      ├─────────────────────────────────────────────────────────┤
+      │  🖼️ Charms Gallery    👁️ Hide Screen Charm    ✕ Exit    │
+      └─────────────────────────────────────────────────────────┘
 ```
 
-* **Frosted Liquid Glass Bar**: High-refraction backdrop blur (`blur(24px) saturate(200%)`), specular chamfered top edges, and glowing jewel pill indicators.
-* **Seamless Windows Click-Through**: You can click right through the transparent window to browse or type. Only the charm cord and top pill bar register your mouse cursor.
-* **Vector Sound Button**: Dynamic SVG speaker toggle matching reference design — displays radiating sound waves when **Sound ON**, and a clean diagonal slash when **Sound OFF**.
-* **Direct Cord Manipulation**: Grab the cord or beads anywhere along its length to swing, stretch, or flick the charm.
-* **Windows System Tray Integration**: Right-click the tray icon in your Windows notification area to switch charms, trigger rituals, toggle sound, or hide/show the overlay.
+### How to use:
+* **Open the Controller**: **Left-click** the Lucky Dangle tray icon in the bottom-right notification area of your Windows taskbar.
+* **Switch Charms**: Click any of the 12 charm buttons in the grid. The screen charm changes instantly.
+* **Trigger Ritual**: Click the highlighted primary action button (e.g., `⚡ Rev the engine`, `✨ Vetri Vel! (Harohara)`).
+* **Toggle Sound**: Click `🔊 Sound ON` / `🔇 Sound Muted` to mute or unmute procedural audio synthesis.
+* **Native Context Menu**: **Right-click** the tray icon for quick shortcuts, radio charm selection, and exit.
 
 ---
 
-## ⌨️ Windows Keyboard Shortcuts
+## 🧿 Complete Charms & Rituals Roster (12 Charms)
 
-| Shortcut | Scope | Action |
-|:---|:---|:---|
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> | Global (System-wide) | Toggle Screen Charm Visibility (Hide / Show) |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | Global (System-wide) | Perform Active Charm Ritual |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> | Global (System-wide) | Re-center Charm to Top Center |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> | Global (System-wide) | Toggle Sound (Mute / Unmute) |
-| <kbd>Ctrl</kbd> + <kbd>D</kbd> | In-app | Toggle Screen Charm Visibility |
-| <kbd>S</kbd> | In-app | Perform Ritual & Sparkle Burst |
-| <kbd>M</kbd> | In-app | Toggle Sound ON / OFF |
-| <kbd>R</kbd> | In-app | Re-center Charm |
-| <kbd>C</kbd> | In-app | Cycle to Next Charm Model |
+Every charm features authentic cultural significance, unique cord beads, custom procedural Web Audio synthesis, and dynamic particle effects:
+
+| # | Charm Name | Icon | Cultural Origin | Meaning & Significance | Interactive Ritual & Sound Effect |
+|:---:|:---|:---:|:---|:---|:---|
+| 1 | **BMW Symbol Spinner** | 🏎️ | Bavaria, Germany | **Bavarian Propeller & Roundel**: Symbol of precision engineering and automotive performance. Strung with M-Power tricolor beads (Cyan, Blue, Red). | **Rev the engine**: High-RPM drag/flick rotation physics with cold turbo acceleration roar and M-Power sparks. |
+| 2 | **Murugan Vel (Sacred Spear)** | 🔱 | Tamil Nadu, India | **Divine Lance of Wisdom**: Represents clarity of intellect, courage, and triumph over internal & external obstacles. Strung with gold & vermilion beads. | **Vetri Vel! (Harohara)**: Sacred Shankha conch shell drone + brass temple bells, golden aura rings, and vibhuti/kumkum sparkles. |
+| 3 | **Nimbu-mirchi** | 🌶️ | India | **Threshold Ward**: 7 fresh green chillies and a lemon tied with a black coal cube at thresholds to dispel negative glances (*buri nazar*). | **Hang a fresh garland**: Emerald-lime sparkle burst with refreshing crisp temple chime. |
+| 4 | **Maneki-neko** | 🐱 | Japan | **Beckoning Cat**: Traditional Japanese talisman that waves its raised paw front-to-back to invite good fortune, luck, and prosperity into the room. | **Beckon good fortune**: Multi-cycle waving paw with authentic mechanical wood click & golden sparkles. |
+| 5 | **Daruma** | 🎯 | Japan | **Goal & Grit Doll**: Paint the left eye pupil when initiating an ambitious goal or wish, and paint the right eye upon achieving it. | **Make a wish / Wish granted**: Zen singing bowl resonance with celebratory chord progression. |
+| 6 | **Drishti bommai** | 👹 | South India | **Fierce Guardian**: Auspicious protector mask hung on new homes and workspaces to catch and neutralize the first envious glance. | **Repaint the guardian**: Cycles vivid sacred hues with radiating guardian aura shockwave. |
+| 7 | **Páncháng jié (Chinese Knot)** | 🏮 | China | **Endless Knot**: An unbroken intertwined silk knot symbolizing boundless longevity, harmony, unity, and endless prosperity. | **Tie in good fortune**: Deep resonant silk gong chime with cinching cord elastic pulse. |
+| 8 | **Himmeli** | 🌾 | Finland | **Geometric Straw Mobile**: Traditional Nordic rye-straw mobile celebrating agricultural harvest, abundance, and mindful focused flow. | **Set it turning**: Smooth 3D geometric spinning with crystalline Nordic wind chimes. |
+| 9 | **Hamsa** | ✋ | Middle East | **Protective Palm**: Ancient palm-shaped talisman offering protection against negative energies and blessing homes with strength and peace. | **Ward off bad luck**: Deep blue mystic energy ring expansion with glass ripple chime. |
+| 10 | **Nazar boncuğu** | 🧿 | Turkey / Aegean | **Evil Eye Glass**: Handcrafted cobalt and turquoise concentric glass eye that absorbs and deflects envious glances. | **Give it a flick**: Concentric sapphire glass protective wave with crystalline ring. |
+| 11 | **Ghanta** | 🔔 | India | **Sacred Temple Bell**: Handcrafted brass bell rung prior to prayer or deep creative work to dispel lethargy, clear the mind, and focus the spirit. | **Ring the bell**: Rich dual-frequency brass bell resonance (440 Hz & 880 Hz) with golden ripples. |
+| 12 | **Custom Emoji** | 🍀 | Yours | **Personalized Talisman**: Hang any personal symbol or emoji that inspires luck, joy, or focus (e.g. 🍀, ⚡, 💎, 🚀, 🕉️). | **Bless custom charm**: Golden burst with cheerful multi-tone bell arpeggio. Click active emoji in gallery to customize. |
 
 ---
 
-## 🧿 Charms & Simple Uses Guide
+## ⌨️ Global Keyboard Shortcuts & Mouse Controls
 
-Each charm has an authentic cultural background, custom cord beads, and an interactive ritual:
+### Global Windows Hotkeys (Work anywhere, even while in other apps/games)
+* <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> — **Perform Active Ritual**: Triggers charm sound, particle aura, and animations immediately.
+* <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> — **Toggle Charm Visibility**: Instant hide / show toggle for meetings or gaming.
+* <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> — **Toggle Audio Mute**: Silence or enable procedural audio effects.
+* <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> — **Re-center Charm**: Smoothly animates the charm back to screen top center.
 
-| Charm | Icon | Origin | Meaning & Simple Use | Ritual Action |
-|:---|:---:|:---|:---|:---|
-| **BMW Symbol Spinner** | 🏎️ | Germany | **High-Performance Spinner**: The legendary Bavarian roundel & propeller spinner with M-Power tricolor cord beads (Cyan, Blue, Red). | **Rev the engine**: High-RPM turbo spin with engine acceleration audio & M-Power sparks. |
-| **Nimbu-mirchi** | 🌶️ | India | **Threshold Ward**: 7 fresh green chillies and a lemon tied to turn away misfortune and negative glance (*buri nazar*). | **Hang a fresh garland**: Green sparkle burst & refreshing crisp chime. |
-| **Maneki-neko** | 🐱 | Japan | **Beckoning Cat**: Traditional lucky cat that waves its raised paw front-to-back to invite wealth, customers, and good fortune. | **Beckon good fortune**: Multi-cycle waving paw with authentic click audio & gold sparks. |
-| **Daruma** | 🎯 | Japan | **Goal & Grit Doll**: Paint the left pupil when you set a goal or make a wish. Paint the right pupil when your goal is achieved. | **Make a wish / Wish granted**: Zen bell & celebratory chord upon achieving goals. |
-| **Drishti bommai** | 👹 | South India | **Fierce Guardian**: An auspicious guardian mask hung on new homes and workplaces to catch and neutralize the first jealous glance. | **Repaint the guardian**: Cycles vibrant sacred hues with guardian aura waves. |
-| **Páncháng jié** | 🏮 | China | **Endless Knot**: An unbroken intertwined silk knot representing boundless longevity, unity, and endless prosperity. | **Tie in good fortune**: Resonant silk gong chime with cinching cord pulse. |
-| **Himmeli** | 🌾 | Finland | **Straw Mobile**: Geometric rye-straw mobile celebrating agricultural abundance, fruitful work, and focused peaceful flow. | **Set it turning**: Smooth 3D geometric spinning with Nordic wind chimes. |
-| **Hamsa** | ✋ | Middle East | **Hand of Fatima**: Protective open palm talisman offering shield against harm, blessing the home with strength and peace. | **Ward off bad luck**: Deep blue mystic energy ring & ripple chime. |
-| **Nazar boncuğu** | 🧿 | Turkey | **Evil Eye Glass**: Handcrafted cobalt and turquoise glass eye that absorbs and shatters negative intentions. | **Give it a flick**: Concentric blue protective pulse with glass ripple audio. |
-| **Ghanta** | 🔔 | India | **Temple Bell**: Sacred brass bell rung prior to prayer or deep work to clear the mind, dispel lethargy, and focus the spirit. | **Ring the bell**: Rich dual-frequency brass bell chime with golden resonance ring. |
-| **Custom Emoji** | 🍀 | Yours | **Personal Talisman**: Hang any emoji or symbol that brings you personal luck, joy, or focus. | **Pick an emoji**: Click the `🍀` button when active to input any emoji of your choice. |
+### Interactive Mouse Gestures (Direct on Screen)
+* **Drag Cord**: Click and drag the cord or beads anywhere to pull, stretch, and swing the charm with real spring-mass Verlet physics.
+* **Flick BMW Spinner**: Click and flick horizontally across the BMW symbol to spin it at high RPM with inertia and deceleration.
+* **Click Charm Body**: Left-click the dangling charm to immediately activate its ritual.
+* **Seamless Click-Through**: Any area outside the charm and cord is completely click-through — you can click desktop icons, web browser tabs, or game controls directly behind it.
 
 ---
 
@@ -109,27 +204,59 @@ Each charm has an authentic cultural background, custom cord beads, and an inter
 
 ```
 luckydangle/
-├── charms/                # High-res charm image assets (BMW, Nazar, Daruma, etc.)
+├── charms/                     # Original high-res charm graphics (PNG, WebP)
+│   ├── BMW.svg.webp            # High-res BMW roundel
+│   ├── murugan-vel.png         # Sacred Murugan Vel lance asset
+│   ├── nazar.png               # Nazar evil eye
+│   └── ...                     # Daruma, Hamsa, Himmeli, etc.
 ├── electron/
-│   └── main.cjs           # Windows Electron transparent overlay & tray manager
-├── public/                # Public assets served by Vite
+│   └── main.cjs                # Windows Electron process, transparent overlay & tray manager
+├── public/                     # Static assets served by Vite
+│   └── charms/                 # Preloaded charm assets for runtime
 ├── src/
-│   ├── audio.js           # Web Audio API procedural synthesizer (engines, bells, chimes)
-│   ├── charms.js          # CharmManager, rendering engines, beads, and rituals
-│   ├── main.js            # Gallery web app logic & card controller
-│   ├── overlay.js         # Transparent screen overlay logic & hover hit testing
-│   ├── particles.js       # Lightweight physics sparkle particle system
-│   ├── physics.js         # Verlet spring-mass dangling string cord physics
-│   └── style.css          # Liquid glass design tokens, card styles, and animations
-├── index.html             # Full-screen Charm Gallery web page
-├── overlay.html           # Transparent click-through screen overlay canvas & pill bar
-├── package.json           # Scripts and project dependencies
-├── start-luckydangle.bat  # Native Windows batch launcher
-├── run-silent.vbs         # Silent background VBS launcher
-└── vite.config.js         # Vite bundle configuration
+│   ├── audio.js                # Web Audio API procedural sound synthesizer (Velu sound, revs, bells)
+│   ├── charms.js               # CharmManager: physics, bead strings, rendering engines, rituals
+│   ├── main.js                 # Full-screen Charm Gallery web page controller
+│   ├── overlay.js              # Transparent screen overlay canvas, Verlet physics loop & input
+│   ├── particles.js            # Particle physics engine for sparkles, aura rings, and bursts
+│   ├── physics.js              # Verlet spring-mass dangling string simulator
+│   ├── style.css               # Liquid-glass tokens, typography, and gallery UI styling
+│   └── tray.js                 # All-in-One Taskbar Controller logic & IPC bridge
+├── index.html                  # Full-screen interactive Charm Gallery & cultural story guide
+├── overlay.html                # Transparent click-through screen overlay canvas
+├── tray.html                   # Taskbar All-in-One Controller liquid-glass flyout interface
+├── package.json                # Project dependencies, scripts, and build configuration
+├── start-luckydangle.bat       # One-click Windows batch launcher
+├── run-silent.vbs              # Silent background VBS launcher (no console window)
+├── vite.config.js              # Vite multi-page build configuration
+└── README.md                   # Complete documentation & user guide
 ```
 
 ---
 
+## 🔧 Development & Customization
+
+### Run in Local Development Mode:
+```powershell
+npm run dev
+```
+Open `http://localhost:5173/` in your browser to inspect the full Charm Gallery or `http://localhost:5173/overlay.html` to debug the physics canvas.
+
+### Build Production Bundle:
+```powershell
+npm run build
+```
+Generates optimized assets into the `dist/` directory used by Electron.
+
+### Add / Customize Charms:
+1. Add your image asset to `public/charms/`.
+2. Register the charm name, description, bead configuration, and ritual in `src/charms.js`.
+3. Add a procedural audio synthesizer method in `src/audio.js`.
+4. Add a button in `tray.html` and register its label in `electron/main.cjs`.
+
+---
+
 ## 📜 License
-Private and Proprietary. All rights reserved by SUDARSHNACHAND.
+
+Created and maintained by **[SUDARSHNACHAND](https://github.com/SUDARSHNACHAND)**.  
+Private & Proprietary. All rights reserved.
